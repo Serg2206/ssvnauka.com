@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Atom, BookOpen, Search, Terminal, X } from 'lucide-react';
 import { signIn } from 'next-auth/react';
+import ArticlesGrid from '@/components/ArticlesGrid';
 
 export default function Home() {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -144,76 +145,7 @@ export default function Home() {
       </section>
 
       {/* BENTO GRID (ARTICLES) */}
-      <section id="articles-section" className="py-20 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl font-bold mb-10 flex items-center gap-3">
-            <Terminal className="w-6 h-6 text-accent" />
-            FRESH_DATA
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* CARD 1 (Large) */}
-            <motion.div 
-              whileHover={{ scale: 1.01 }}
-              className="col-span-1 md:col-span-2 h-[300px] bg-surface border border-white/10 p-8 relative overflow-hidden group cursor-pointer hover:border-primary transition-colors"
-            >
-              <div className="absolute top-0 right-0 p-4 opacity-50 group-hover:opacity-100 transition-opacity">
-                 <BookOpen className="w-8 h-8 text-primary" />
-              </div>
-              <div className="flex flex-col justify-end h-full z-10 relative">
-                <span className="text-primary font-mono text-sm mb-2">BIOTECH</span>
-                <h3 className="text-3xl font-bold mb-2">Нейроинтерфейсы: Как мы будем управлять ПК силой мысли</h3>
-                <p className="text-gray-400">Разбор технологии Neuralink и её конкурентов в РФ.</p>
-              </div>
-            </motion.div>
-
-            {/* CARD 2 (Small) */}
-            <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="h-[300px] bg-surface border border-white/10 p-6 flex flex-col justify-between hover:border-accent cursor-pointer transition-colors"
-            >
-               <div>
-                 <span className="text-accent font-mono text-xs border border-accent/30 px-2 py-1 rounded-full">GUIDE</span>
-                 <h3 className="text-xl font-bold mt-4">Как пройти Антиплагиат ВУЗ?</h3>
-               </div>
-               <div className="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
-                 <div className="h-full bg-accent w-[75%]" />
-               </div>
-            </motion.div>
-            
-             {/* CARD 3 (Medium) */}
-             <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="h-[250px] bg-surface border border-white/10 p-6 hover:border-primary cursor-pointer transition-colors"
-            >
-               <span className="text-gray-500 font-mono text-sm">12 min read</span>
-               <h3 className="text-xl font-bold mt-2">Будущее алгоритмов шифрования</h3>
-            </motion.div>
-            
-            {/* CARD 4 (Medium) */}
-             <motion.div 
-              whileHover={{ scale: 1.02 }}
-              className="h-[250px] bg-surface border border-white/10 p-6 hover:border-primary cursor-pointer transition-colors"
-            >
-               <span className="text-gray-500 font-mono text-sm">Author: AI_Bot</span>
-               <h3 className="text-xl font-bold mt-2">Генеративный дизайн в архитектуре</h3>
-            </motion.div>
-            
-             {/* CARD 5 (Action) */}
-             <motion.div 
-              whileHover={{ scale: 1.02 }}
-              onClick={() => setShowSubmitModal(true)}
-              className="h-[250px] bg-gradient-to-br from-surface to-surface border border-white/10 p-6 flex items-center justify-center hover:border-white cursor-pointer transition-colors"
-            >
-               <div className="text-center">
-                 <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-neon-gradient mb-2">СТАТЬ АВТОРОМ</h3>
-                 <p className="text-sm text-gray-400">Подать заявку -&gt;</p>
-               </div>
-            </motion.div>
-
-          </div>
-        </div>
-      </section>
+      <ArticlesGrid />
 
       {/* LOGIN MODAL */}
       <AnimatePresence>

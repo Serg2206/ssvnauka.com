@@ -17,11 +17,13 @@ model User {
   emailVerified  DateTime?
   image          String?
   hashedPassword String?
+  role           String    @default("reader") // reader, author, admin
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
   accounts Account[]
   sessions Session[]
+  articles Article[]
 
   @@map("users")
 }
@@ -63,4 +65,47 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Article {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String
+  content     String    @db.Text
+  coverImage  String?
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+  tags        Tag[]
+  readTime    Int       // в минутах
+  views       Int       @default(0)
+  published   Boolean   @default(true)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("articles")
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  color     String    // для UI акцентов (primary или accent)
+  articles  Article[]
+  createdAt DateTime  @default(now())
+
+  @@map("categories")
+}
+
+model Tag {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  articles  Article[]
+  createdAt DateTime  @default(now())
+
+  @@map("tags")
 }

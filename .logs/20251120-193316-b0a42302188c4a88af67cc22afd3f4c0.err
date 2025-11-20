@@ -1,0 +1,16 @@
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase
+Error fetching articles: B [Error]: Dynamic server usage: Route /api/articles couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at V (/opt/hostedapp/node/root/app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:21778)
+    at Object.get (/opt/hostedapp/node/root/app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:29465)
+    at l (/home/ubuntu/ssvnauka-mvp/nextjs_space/.build/server/app/api/articles/route.js:1:545)
+    at /opt/hostedapp/node/root/app/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:6:38417
+    at /opt/hostedapp/node/root/app/node_modules/next/dist/server/lib/trace/tracer.js:140:36
+    at NoopContextManager.with (/opt/hostedapp/node/root/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:7062)
+    at ContextAPI.with (/opt/hostedapp/node/root/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:518)
+    at NoopTracer.startActiveSpan (/opt/hostedapp/node/root/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18093)
+    at ProxyTracer.startActiveSpan (/opt/hostedapp/node/root/app/node_modules/next/dist/compiled/@opentelemetry/api/index.js:1:18854)
+    at /opt/hostedapp/node/root/app/node_modules/next/dist/server/lib/trace/tracer.js:122:103 {
+  description: "Route /api/articles couldn't be rendered statically because it used `request.url`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+  digest: 'DYNAMIC_SERVER_USAGE'
+}
+ ⚠ metadataBase property in metadata export is not set for resolving social open graph or twitter images, using "http://localhost:3000". See https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase

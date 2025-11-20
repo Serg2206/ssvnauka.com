@@ -1,0 +1,12 @@
+[master 6846bb8] MVP with complete documentation
+ 10 files changed, 616 insertions(+), 1 deletion(-)
+ create mode 100644 README.md
+ create mode 100644 docs/BRAND_BOOK.md
+ create mode 100644 docs/BRAND_BOOK.pdf
+ create mode 100644 docs/MANIFEST.md
+ create mode 100644 docs/MANIFEST.pdf
+ create mode 100644 docs/STRATEGY.md
+ create mode 100644 docs/STRATEGY.pdf
+ create mode 100644 docs/TECHNICAL_SPEC.md
+ create mode 100644 docs/TECHNICAL_SPEC.pdf
+###6846bb8b5ee6ba959c2dfc8549766d65754f2d7d###
