@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Manrope } from "next/font/google";
 import "./globals.css";
@@ -28,6 +27,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
+  },
+  verification: {
+    google: "google9c6940bc8c5a4df7",
   },
   openGraph: {
     title: "ssvnauka — Scientific Media Platform v2.0",
