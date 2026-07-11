@@ -102,3 +102,6 @@ yarn dev
 ---
 
 **Designed by Serg2206 & AI Co-pilot. 2025.**
+
+
+<!-- WhatsApp Community Integration Active - 2026-07-11 -->
