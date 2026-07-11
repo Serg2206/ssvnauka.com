@@ -29,6 +29,12 @@ export function markdownToHtml(markdown: string): string {
   html = html.replace(/\n\n/gim, '</p><p class="mb-4 leading-relaxed">');
   html = '<p class="mb-4 leading-relaxed">' + html + '</p>';
 
+  // Изображения (до ссылок): lazy-loading + отзывчивость для скорости и CLS
+  html = html.replace(
+    /!\[([^\]]*)\]\(([^)]+)\)/gim,
+    '<img src="$2" alt="$1" loading="lazy" decoding="async" class="rounded-lg my-6 max-w-full h-auto" />'
+  );
+
   // Ссылки
   html = html.replace(/\[([^\]]+)\]\(([^\)]+)\)/gim, '<a href="$2" class="text-primary hover:text-accent underline">$1</a>');
 
