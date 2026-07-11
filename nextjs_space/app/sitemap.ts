@@ -23,7 +23,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       orderBy: { publishedAt: 'desc' },
     });
 
-    const articleRoutes: MetadataRoute.Sitemap = articles.map((a) => ({
+    const articleRoutes: MetadataRoute.Sitemap = articles.map((a: {
+      slug: string;
+      updatedAt: Date;
+      publishedAt: Date | null;
+    }) => ({
       url: `${BASE_URL}/article/${a.slug}`,
       lastModified: a.updatedAt ?? a.publishedAt ?? new Date(),
       changeFrequency: 'weekly',
