@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import WhatsAppWidget from "@/components/WhatsAppWidget";
 
 const inter = Inter({ 
   subsets: ["latin", "cyrillic"],
@@ -103,6 +104,31 @@ const jsonLd = {
         "https://orcid.org/0000-0002-6951-9789",
       ],
     },
+    {
+      "@type": "MedicalOrganization",
+      "@id": `${SITE_URL}/#medicalorg`,
+      name: "Медицинский Центр МАРИЯ",
+      url: SITE_URL,
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "WhatsApp Community",
+          url: "https://chat.whatsapp.com/BP1uBjDZEE70SlyKBmpZiZ",
+          availableLanguage: ["Russian", "Ukrainian"],
+        },
+        {
+          "@type": "ContactPoint",
+          telephone: "+380-67-570-79-49",
+          contactType: "Запись на консультацию",
+        },
+      ],
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "ул. Сирохинская, 7-Б",
+        addressLocality: "Харьков",
+        addressCountry: "UA",
+      },
+    },
   ],
 };
 
@@ -121,6 +147,7 @@ export default function RootLayout({
         <Providers>
           {children}
         </Providers>
+        <WhatsAppWidget />
       </body>
     </html>
   );
