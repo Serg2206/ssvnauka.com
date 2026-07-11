@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -6,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Atom, BookOpen, Search, Terminal, X } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 import ArticlesGrid from '@/components/ArticlesGrid';
+import WhatsAppCTASection from '@/components/WhatsAppCTASection';
 
 export default function Home() {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -146,6 +146,9 @@ export default function Home() {
 
       {/* BENTO GRID (ARTICLES) */}
       <ArticlesGrid />
+
+      {/* WHATSAPP COMMUNITY CTA */}
+      <WhatsAppCTASection />
 
       {/* LOGIN MODAL */}
       <AnimatePresence>
