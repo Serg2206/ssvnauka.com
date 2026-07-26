@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Atom, BookOpen, Search, Terminal, X } from 'lucide-react';
 import { signIn } from 'next-auth/react';
@@ -8,6 +9,7 @@ import ArticlesGrid, { type Article } from '@/components/ArticlesGrid';
 import WhatsAppCTASection from '@/components/WhatsAppCTASection';
 
 export default function HomeClient({ articles }: { articles: Article[] }) {
+  const router = useRouter();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [email, setEmail] = useState('');
@@ -17,6 +19,13 @@ export default function HomeClient({ articles }: { articles: Article[] }) {
   const [submissionMessage, setSubmissionMessage] = useState('');
   const [loginError, setLoginError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) router.push(`/search?q=${encodeURIComponent(q)}`);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,14 +80,19 @@ export default function HomeClient({ articles }: { articles: Article[] }) {
             <span className="text-xl font-bold tracking-tighter font-display">ssvnauka</span>
           </div>
 
-          <div className="hidden md:flex items-center bg-surface/50 border border-white/5 rounded-full px-4 py-2 w-96">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="hidden md:flex items-center bg-surface/50 border border-white/5 rounded-full px-4 py-2 w-96"
+          >
             <Search className="w-4 h-4 text-gray-500 mr-3" />
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search for knowledge..."
               className="bg-transparent border-none outline-none text-sm w-full placeholder-gray-600"
             />
-          </div>
+          </form>
 
           <button
             onClick={() => setShowLoginModal(true)}

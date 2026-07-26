@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -49,7 +49,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
+    apple: "/icon-180.png",
   },
+  manifest: "/manifest.json",
   verification: {
     google: "google9c6940bc8c5a4df7",
   },
@@ -79,6 +81,10 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: ["/og-image.png"],
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#050505",
 };
 
 const jsonLd = {
