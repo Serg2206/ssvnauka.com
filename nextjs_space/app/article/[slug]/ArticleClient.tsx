@@ -1,8 +1,7 @@
-
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Clock, Eye, Share2, Copy, Check } from 'lucide-react';
 import { markdownToHtml } from '@/lib/markdown';
@@ -22,44 +21,30 @@ interface Article {
   tags: { name: string; slug: string }[];
 }
 
-export default function ArticleClient() {
-  const params = useParams();
+export default function ArticleClient({ article }: { article: Article }) {
   const router = useRouter();
-  const [article, setArticle] = useState<Article | null>(null);
-  const [loading, setLoading] = useState(true);
   const [readingProgress, setReadingProgress] = useState(0);
   const [copied, setCopied] = useState(false);
-  const [headings, setHeadings] = useState<{ id: string; text: string; level: number }[]>([]);
 
+  const contentHtml = useMemo(() => markdownToHtml(article.content), [article.content]);
+
+  const headings = useMemo(() => {
+    if (typeof document === 'undefined') return [];
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = contentHtml;
+    const headingElements = tempDiv.querySelectorAll('h1, h2, h3');
+    return Array.from(headingElements).map((heading, index) => ({
+      id: `heading-${index}`,
+      text: heading.textContent || '',
+      level: parseInt(heading.tagName[1]),
+    }));
+  }, [contentHtml]);
+
+  // Fire-and-forget view count increment; doesn't block rendering or SSR.
   useEffect(() => {
-    const fetchArticle = async () => {
-      try {
-        const res = await fetch(`/api/articles/${params.slug}`);
-        if (!res.ok) throw new Error('Article not found');
-        const data = await res.json();
-        setArticle(data);
-        
-        // Extract headings for Table of Contents
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = markdownToHtml(data.content);
-        const headingElements = tempDiv.querySelectorAll('h1, h2, h3');
-        const extractedHeadings = Array.from(headingElements).map((heading, index) => ({
-          id: `heading-${index}`,
-          text: heading.textContent || '',
-          level: parseInt(heading.tagName[1]),
-        }));
-        setHeadings(extractedHeadings);
-      } catch (error) {
-        console.error('Error:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (params.slug) {
-      fetchArticle();
-    }
-  }, [params.slug]);
+    fetch(`/api/articles/${article.slug}`).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [article.slug]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -79,31 +64,6 @@ export default function ArticleClient() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (!article) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">404</h1>
-          <p className="text-gray-400 mb-8">Статья не найдена</p>
-          <button
-            onClick={() => router.push('/')}
-            className="px-6 py-3 bg-primary text-black font-bold hover:bg-accent transition-colors"
-          >
-            На главную
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -263,7 +223,7 @@ export default function ArticleClient() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
               className="prose prose-invert prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: markdownToHtml(article.content) }}
+              dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
 
             {/* Share at the end */}

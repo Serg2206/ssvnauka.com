@@ -1,10 +1,12 @@
 import { cache } from 'react';
+import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { prisma } from '@/lib/db';
 import ArticleClient from './ArticleClient';
 
-// Article data is fetched per request; never prerendered at build (no DB needed then).
-export const dynamic = 'force-dynamic';
+// Cached and revalidated periodically (ISR); the try/catch fallback in
+// getArticle means no database connection is required at build time.
+export const revalidate = 300;
 
 const BASE_URL = 'https://ssvnauka.com';
 
@@ -13,7 +15,11 @@ const getArticle = cache(async (slug: string) => {
   try {
     return await prisma.article.findUnique({
       where: { slug },
-      include: { author: { select: { name: true } }, category: true },
+      include: {
+        author: { select: { name: true, email: true } },
+        category: true,
+        tags: true,
+      },
     });
   } catch (error) {
     console.error('article page: could not load article', error);
@@ -63,38 +69,53 @@ export default async function Page(
 ) {
   const article = await getArticle(params.slug);
 
-  const jsonLd = article
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'Article',
-        headline: article.title,
-        description: article.excerpt,
-        image: article.coverImage
-          ? [article.coverImage]
-          : [`${BASE_URL}/og-image.png`],
-        datePublished: article.publishedAt?.toISOString(),
-        dateModified: article.updatedAt?.toISOString(),
-        author: {
-          '@type': 'Person',
-          name: article.author?.name ?? 'Prof. Sergiy Sushkov',
-        },
-        publisher: {
-          '@type': 'Organization',
-          name: 'ssvnauka',
-        },
-        mainEntityOfPage: `${BASE_URL}/article/${article.slug}`,
-      }
-    : null;
+  if (!article) {
+    notFound();
+  }
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.excerpt,
+    image: article.coverImage
+      ? [article.coverImage]
+      : [`${BASE_URL}/og-image.png`],
+    datePublished: article.publishedAt?.toISOString(),
+    dateModified: article.updatedAt?.toISOString(),
+    author: {
+      '@type': 'Person',
+      name: article.author?.name ?? 'Prof. Sergiy Sushkov',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'ssvnauka',
+    },
+    mainEntityOfPage: `${BASE_URL}/article/${article.slug}`,
+  };
 
   return (
     <>
-      {jsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      )}
-      <ArticleClient />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ArticleClient
+        article={{
+          id: article.id,
+          title: article.title,
+          slug: article.slug,
+          excerpt: article.excerpt,
+          content: article.content,
+          coverImage: article.coverImage,
+          readTime: article.readTime,
+          views: article.views,
+          publishedAt: article.publishedAt?.toISOString() ?? new Date().toISOString(),
+          author: { name: article.author.name ?? '', email: article.author.email },
+          category: article.category,
+          tags: article.tags,
+        }}
+      />
     </>
   );
 }

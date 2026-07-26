@@ -1,12 +1,10 @@
-
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { BookOpen, Terminal, Clock } from 'lucide-react';
 
-interface Article {
+export interface Article {
   id: string;
   title: string;
   slug: string;
@@ -16,28 +14,10 @@ interface Article {
   tags: { name: string }[];
 }
 
-export default function ArticlesGrid() {
+export default function ArticlesGrid({ articles }: { articles: Article[] }) {
   const router = useRouter();
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const res = await fetch('/api/articles?limit=5');
-        const data = await res.json();
-        setArticles(data.articles || []);
-      } catch (error) {
-        console.error('Error fetching articles:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchArticles();
-  }, []);
-
-  if (loading) {
+  if (articles.length === 0) {
     return (
       <section className="py-20 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-6">
@@ -45,16 +25,7 @@ export default function ArticlesGrid() {
             <Terminal className="w-6 h-6 text-accent" />
             FRESH_DATA
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[...Array(5)].map((_, i) => (
-              <div
-                key={i}
-                className={`${
-                  i === 0 ? 'col-span-1 md:col-span-2 h-[300px]' : 'h-[250px]'
-                } bg-surface border border-white/10 p-6 animate-pulse`}
-              />
-            ))}
-          </div>
+          <p className="text-gray-500">Статьи скоро появятся.</p>
         </div>
       </section>
     );

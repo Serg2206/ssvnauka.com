@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { prisma } from '@/lib/db';
 
-// Generated at request time so no database connection is required at build.
-export const dynamic = 'force-dynamic';
+// Cached and revalidated hourly; the try/catch fallback below means no
+// database connection is required at build time.
+export const revalidate = 3600;
 
 const BASE_URL = 'https://ssvnauka.com';
 
